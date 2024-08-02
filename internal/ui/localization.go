@@ -1,31 +1,35 @@
 package ui
 
 import (
+	_ "embed"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"os"
 )
+
+//go:embed locales/en.json
+var enJSON []byte
+
+//go:embed locales/ru.json
+var ruJSON []byte
 
 type Localization struct {
 	translations map[string]string
 }
 
 func LoadLocalization(language string) (*Localization, error) {
-	filePath := fmt.Sprintf("locales/%s.json", language)
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
+	var data []byte
 
-	bytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		return nil, err
+	switch language {
+	case "en":
+		data = enJSON
+	case "ru":
+		data = ruJSON
+	default:
+		return nil, fmt.Errorf("unsupported language: %s", language)
 	}
 
 	var translations map[string]string
-	err = json.Unmarshal(bytes, &translations)
+	err := json.Unmarshal(data, &translations)
 	if err != nil {
 		return nil, err
 	}

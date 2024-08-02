@@ -11,7 +11,7 @@ Edit the `config.json` file to set default values for the application.
 
 ## Localization
 
-Localization files are in the `locales` directory. You can add more languages by creating new JSON files and updating the `config.json` file to use the new language.
+Localization files are in the `internal/ui/locales` directory. You can add more languages by creating new JSON files and updating the `config.json` file to use the new language.
 
 ## Running the Application
 
