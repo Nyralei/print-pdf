@@ -1,0 +1,100 @@
+stages:
+  - build
+  - package
+  - upload
+
+variables:
+  GO_VERSION: "1.22.4"
+
+before_script:
+  - apt-get update
+  - apt-get install -y libgtk-3-dev ruby ruby-dev
+  - gem install fpm
+
+build:
+  stage: build
+  image: golang:1.22.4
+  script:
+    - go mod tidy
+    - go build -o print-pdf -v ./cmd/print-pdf
+  artifacts:
+    paths:
+      - print-pdf
+
+get_version:
+  stage: build
+  script:
+    - >
+      TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+      if [ -z "$TAG" ]; then
+        EPOCH_TIME=$(date +%s)
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
+        RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
+      else
+        VERSION=$TAG
+        RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
+      fi
+      echo "VERSION=$VERSION" >> variables.env
+      echo "RPM_VERSION=$RPM_VERSION" >> variables.env
+  artifacts:
+    reports:
+      dotenv: variables.env
+
+prepare_package:
+  stage: package
+  dependencies:
+    - build
+  script:
+    - mkdir -p package/usr/local/bin
+    - mkdir -p package/usr/share/applications
+    - cp print-pdf package/usr/local/bin/
+    - cp .package-build/print-pdf.desktop package/usr/share/applications/
+  artifacts:
+    paths:
+      - package/usr/local/bin
+      - package/usr/share/applications
+
+build_deb_package:
+  stage: package
+  dependencies:
+    - prepare_package
+    - get_version
+  script:
+    - source variables.env
+    - fpm -s dir -t deb -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
+  artifacts:
+    paths:
+      - print-pdf_${VERSION}_amd64.deb
+
+build_rpm_package:
+  stage: package
+  dependencies:
+    - prepare_package
+    - get_version
+  script:
+    - source variables.env
+    - fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
+  artifacts:
+    paths:
+      - print-pdf-${RPM_VERSION}-1.x86_64.rpm
+
+upload_deb:
+  stage: upload
+  dependencies:
+    - build_deb_package
+  script:
+    - echo "Uploading .deb package..."
+  artifacts:
+    paths:
+      - print-pdf_${VERSION}_amd64.deb
+
+upload_rpm:
+  stage: upload
+  dependencies:
+    - build_rpm_package
+  script:
+    - echo "Uploading .rpm package..."
+  artifacts:
+    paths:
+      - print-pdf-${RPM_VERSION}-1.x86_64.rpm
