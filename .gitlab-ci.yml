@@ -35,7 +35,7 @@ get_version:
         VERSION=$TAG
         RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
       fi
-      echo "VERSION=$VERSION" >> variables.env
+      echo "VERSION=$VERSION" > variables.env
       echo "RPM_VERSION=$RPM_VERSION" >> variables.env
   artifacts:
     reports:
