@@ -4,10 +4,9 @@ A simple application to create A4 PDFs from images.
 
 ![alt text](image.png)
 
-
 ## Configuration
 
-Edit the `config.json` file to set default values for the application.
+The configuration file `config.json` should be located in the `~/.config/print-pdf` directory. Edit this file to set default values for the application.
 
 ## Localization
 
