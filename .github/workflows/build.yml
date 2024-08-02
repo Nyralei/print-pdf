@@ -67,7 +67,8 @@ jobs:
       id: build_deb
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
-        DEB_FILE=$(fpm -s dir -t deb -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications | grep -oP 'deb .*? \K.*print-pdf.*\.deb')
+        fpm -s dir -t deb -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
+        DEB_FILE=$(ls print-pdf_*.deb)
         echo "deb_file=$DEB_FILE" >> $GITHUB_OUTPUT
 
     - name: Upload .deb package
@@ -80,7 +81,8 @@ jobs:
       id: build_rpm
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
-        RPM_FILE=$(fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications | grep -oP 'rpm .*? \K.*print-pdf.*\.rpm')
+        fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
+        RPM_FILE=$(ls print-pdf-*.rpm)
         echo "rpm_file=$RPM_FILE" >> $GITHUB_OUTPUT
 
     - name: Upload .rpm package
