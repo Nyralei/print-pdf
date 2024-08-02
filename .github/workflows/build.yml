@@ -45,10 +45,7 @@ jobs:
           VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
         fi
         
-        RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
-        
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "rpm_version=$RPM_VERSION" >> $GITHUB_OUTPUT
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
@@ -67,23 +64,27 @@ jobs:
         cp .package-build/print-pdf.desktop package/usr/share/applications/
 
     - name: Build .deb package
+      id: build_deb
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
-        fpm -s dir -t deb -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
+        DEB_FILE=$(fpm -s dir -t deb -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications | grep -oP 'deb .*? \K.*print-pdf.*\.deb')
+        echo "deb_file=$DEB_FILE" >> $GITHUB_OUTPUT
 
     - name: Upload .deb package
       uses: actions/upload-artifact@v4
       with:
         name: print-pdf-deb
-        path: print-pdf_${{ steps.get_version.outputs.version }}_amd64.deb
+        path: ${{ steps.build_deb.outputs.deb_file }}
 
     - name: Build .rpm package
+      id: build_rpm
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
-        fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
+        RPM_FILE=$(fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications | grep -oP 'rpm .*? \K.*print-pdf.*\.rpm')
+        echo "rpm_file=$RPM_FILE" >> $GITHUB_OUTPUT
 
     - name: Upload .rpm package
       uses: actions/upload-artifact@v4
       with:
         name: print-pdf-rpm
-        path: print-pdf-${{ steps.get_version.outputs.rpm_version }}-1.x86_64.rpm
+        path: ${{ steps.build_rpm.outputs.rpm_file }}
