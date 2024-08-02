@@ -40,8 +40,55 @@ jobs:
     - name: Build the binary
       run: go build -o print-pdf -v ./cmd/print-pdf
 
+    - name: Get package version
+      id: get_version
+      run: |
+        TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$TAG" ]; then
+          VERSION=$(git rev-parse --short HEAD)
+        else
+          VERSION=$TAG
+        fi
+        echo "::set-output name=version::$VERSION"
+
     - name: Upload build artifact
       uses: actions/upload-artifact@v3
       with:
         name: print-pdf
         path: print-pdf
+
+    - name: Install FPM
+      run: sudo gem install fpm
+
+    - name: Build .deb package
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        fpm -s dir -t deb -n print-pdf -v $VERSION --prefix /usr/local/bin print-pdf
+
+    - name: Upload .deb package
+      uses: actions/upload-artifact@v3
+      with:
+        name: print-pdf-deb
+        path: print-pdf_${{ steps.get_version.outputs.version }}_amd64.deb
+
+    - name: Build .rpm package
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        fpm -s dir -t rpm -n print-pdf -v $VERSION --prefix /usr/local/bin print-pdf
+
+    - name: Upload .rpm package
+      uses: actions/upload-artifact@v3
+      with:
+        name: print-pdf-rpm
+        path: print-pdf-${{ steps.get_version.outputs.version }}-1.x86_64.rpm
+
+    - name: Build .pacman package
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        fpm -s dir -t pacman -n print-pdf -v $VERSION --prefix /usr/local/bin print-pdf
+
+    - name: Upload .pacman package
+      uses: actions/upload-artifact@v3
+      with:
+        name: print-pdf-pacman
+        path: print-pdf-${{ steps.get_version.outputs.version }}-1-x86_64.pkg.tar.zst
