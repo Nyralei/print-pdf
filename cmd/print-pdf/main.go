@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Nyralei/print-pdf/internal/config"
+	config "github.com/Nyralei/print-pdf/internal/config"
 	internalui "github.com/Nyralei/print-pdf/internal/ui"
 	"github.com/andlabs/ui"
 	_ "github.com/andlabs/ui/winmanifest"
