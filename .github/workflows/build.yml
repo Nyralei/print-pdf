@@ -21,16 +21,6 @@ jobs:
       with:
         go-version: 1.22.4
 
-    - name: Cache Go modules
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache/go-build
-          ~/go/pkg/mod
-        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-        restore-keys: |
-          ${{ runner.os }}-go-
-
     - name: Install GTK3 dependencies
       run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev
 
@@ -81,14 +71,3 @@ jobs:
       with:
         name: print-pdf-rpm
         path: print-pdf-${{ steps.get_version.outputs.version }}-1.x86_64.rpm
-
-    - name: Build .pacman package
-      run: |
-        VERSION=${{ steps.get_version.outputs.version }}
-        fpm -s dir -t pacman -n print-pdf -v $VERSION --prefix /usr/local/bin print-pdf
-
-    - name: Upload .pacman package
-      uses: actions/upload-artifact@v3
-      with:
-        name: print-pdf-pacman
-        path: print-pdf-${{ steps.get_version.outputs.version }}-1-x86_64.pkg.tar.zst
