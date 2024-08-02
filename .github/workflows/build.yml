@@ -56,7 +56,7 @@ jobs:
         mkdir -p package/usr/local/bin
         mkdir -p package/usr/share/applications
         cp print-pdf package/usr/local/bin/
-        cp ./package-build/print-pdf.desktop package/usr/share/applications/
+        cp .package-build/print-pdf.desktop package/usr/share/applications/
         fpm -s dir -t deb -n print-pdf -v $VERSION -C package --prefix /usr/local/bin usr/local/bin/print-pdf --prefix /usr/share/applications usr/share/applications/print-pdf.desktop
 
     - name: Upload .deb package
@@ -71,7 +71,7 @@ jobs:
         mkdir -p package/usr/local/bin
         mkdir -p package/usr/share/applications
         cp print-pdf package/usr/local/bin/
-        cp ./package-build/print-pdf.desktop package/usr/share/applications/
+        cp .package-build/print-pdf.desktop package/usr/share/applications/
         fpm -s dir -t rpm -n print-pdf -v $VERSION -C package --prefix /usr/local/bin usr/local/bin/print-pdf --prefix /usr/share/applications usr/share/applications/print-pdf.desktop
 
     - name: Upload .rpm package
