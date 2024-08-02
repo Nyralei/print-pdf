@@ -82,4 +82,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: print-pdf-rpm
-        path: print-pdf-${{ steps.get_version.outputs.rpm_version }}.x86_64.rpm
+        path: print_pdf_${{ steps.get_version.outputs.rpm_version }}.x86_64.rpm
