@@ -33,16 +33,18 @@ jobs:
     - name: Get package version
       id: get_version
       run: |
-        TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-        if [ -z "$TAG" ]; then
-          EPOCH_TIME=$(date +%s)
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
-          RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
+        EPOCH_TIME=$(date +%s)
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
+        
+        if [[ "$BRANCH_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+          VERSION=$BRANCH_NAME
         else
-          VERSION=$TAG
-          RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
+          VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
         fi
+        
+        RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
+        
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "rpm_version=$RPM_VERSION" >> $GITHUB_OUTPUT
 
