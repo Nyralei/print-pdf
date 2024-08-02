@@ -35,11 +35,11 @@ jobs:
       run: |
         TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
         if [ -z "$TAG" ]; then
-          VERSION=$(git rev-parse --short HEAD)
-        else
           EPOCH_TIME=$(date +%s)
           COMMIT_HASH=$(git rev-parse --short HEAD)
           VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
+        else
+          VERSION=$TAG
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
