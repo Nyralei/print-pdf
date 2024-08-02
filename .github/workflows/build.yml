@@ -50,14 +50,17 @@ jobs:
     - name: Install FPM
       run: sudo gem install fpm
 
-    - name: Build .deb package
+    - name: Prepare package directory
       run: |
-        VERSION=${{ steps.get_version.outputs.version }}
         mkdir -p package/usr/local/bin
         mkdir -p package/usr/share/applications
         cp print-pdf package/usr/local/bin/
         cp .package-build/print-pdf.desktop package/usr/share/applications/
-        fpm -s dir -t deb -n print-pdf -v $VERSION -C package --prefix /usr/local/bin usr/local/bin/print-pdf --prefix /usr/share/applications usr/share/applications/print-pdf.desktop
+
+    - name: Build .deb package
+      run: |
+        VERSION=${{ steps.get_version.outputs.version }}
+        fpm -s dir -t deb -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
 
     - name: Upload .deb package
       uses: actions/upload-artifact@v4
@@ -68,11 +71,7 @@ jobs:
     - name: Build .rpm package
       run: |
         VERSION=${{ steps.get_version.outputs.version }}
-        mkdir -p package/usr/local/bin
-        mkdir -p package/usr/share/applications
-        cp print-pdf package/usr/local/bin/
-        cp .package-build/print-pdf.desktop package/usr/share/applications/
-        fpm -s dir -t rpm -n print-pdf -v $VERSION -C package --prefix /usr/local/bin usr/local/bin/print-pdf --prefix /usr/share/applications usr/share/applications/print-pdf.desktop
+        fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
 
     - name: Upload .rpm package
       uses: actions/upload-artifact@v4
