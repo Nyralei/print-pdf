@@ -33,12 +33,9 @@ jobs:
     - name: Get package version
       id: get_version
       run: |
-        TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
-        if [ -z "$TAG" ]; then
-          VERSION=$(git rev-parse --short HEAD)
-        else
-          VERSION=$TAG
-        fi
+        EPOCH_TIME=$(date +%s)
+        HASH=$(echo -n $EPOCH_TIME | sha1sum | cut -c 1-8)
+        VERSION="${EPOCH_TIME}-${HASH}"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Upload build artifact
