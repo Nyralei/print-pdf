@@ -34,8 +34,8 @@ jobs:
       id: get_version
       run: |
         EPOCH_TIME=$(date +%s)
-        HASH=$(echo -n $EPOCH_TIME | sha1sum | cut -c 1-8)
-        VERSION="${EPOCH_TIME}-${HASH}"
+        COMMIT_HASH=$(git rev-parse --short HEAD)
+        VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
     - name: Upload build artifact
