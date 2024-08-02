@@ -1,7 +1,7 @@
 {
-	"choose_image": "Выбрать изображение",
+	"choose_image": "Выбрать",
 	"image_path": "Путь к изображению:",
-	"choose_pdf": "Выбрать путь сохранения PDF",
+	"choose_pdf": "Выбрать",
 	"pdf_path": "Путь к PDF:",
 	"open_in_browser": "Открыть в браузере",
 	"landscape_orientation": "Альбомная ориентация",
