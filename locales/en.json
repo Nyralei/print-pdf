@@ -1,0 +1,15 @@
+{
+	"choose_image": "Choose Image",
+	"image_path": "Image Path:",
+	"choose_pdf": "Choose PDF Save Path",
+	"pdf_path": "PDF Path:",
+	"open_in_browser": "Open in Browser",
+	"landscape_orientation": "Landscape Orientation",
+	"create_pdf": "Create PDF",
+	"error": "Error",
+	"success": "Success",
+	"pdf_created": "PDF created successfully.",
+	"error_creating_pdf": "Error creating PDF: %v",
+	"error_opening_pdf": "Error opening PDF: %v",
+	"select_image_and_pdf": "Please select both an image and a PDF save path."
+}

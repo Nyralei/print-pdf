@@ -1,0 +1,15 @@
+{
+	"choose_image": "Выбрать изображение",
+	"image_path": "Путь к изображению:",
+	"choose_pdf": "Выбрать путь сохранения PDF",
+	"pdf_path": "Путь к PDF:",
+	"open_in_browser": "Открыть в браузере",
+	"landscape_orientation": "Альбомная ориентация",
+	"create_pdf": "Создать PDF",
+	"error": "Ошибка",
+	"success": "Успех",
+	"pdf_created": "PDF успешно создан.",
+	"error_creating_pdf": "Ошибка при создании PDF: %v",
+	"error_opening_pdf": "Ошибка при открытии PDF: %v",
+	"select_image_and_pdf": "Пожалуйста, выберите изображение и путь сохранения PDF."
+}
