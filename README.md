@@ -1,6 +1,9 @@
 # PDF Creator
 
-A simple application to create PDFs from images.
+A simple application to create A4 PDFs from images.
+
+![alt text](image.png)
+
 
 ## Configuration
 
