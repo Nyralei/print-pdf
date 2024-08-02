@@ -38,13 +38,10 @@ jobs:
           EPOCH_TIME=$(date +%s)
           COMMIT_HASH=$(git rev-parse --short HEAD)
           VERSION="${EPOCH_TIME}-${COMMIT_HASH}"
-          RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
         else
           VERSION=$TAG
-          RPM_VERSION=$(echo $VERSION | sed 's/-/_/g')
         fi
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "rpm_version=$RPM_VERSION" >> $GITHUB_OUTPUT
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
@@ -75,11 +72,11 @@ jobs:
 
     - name: Build .rpm package
       run: |
-        RPM_VERSION=${{ steps.get_version.outputs.rpm_version }}
-        fpm -s dir -t rpm -n print-pdf -v $RPM_VERSION -C package usr/local/bin usr/share/applications
+        VERSION=${{ steps.get_version.outputs.version }}
+        fpm -s dir -t rpm -n print-pdf -v $VERSION -C package usr/local/bin usr/share/applications
 
     - name: Upload .rpm package
       uses: actions/upload-artifact@v4
       with:
         name: print-pdf-rpm
-        path: print_pdf_${{ steps.get_version.outputs.rpm_version }}.x86_64.rpm
+        path: print-pdf-${{ steps.get_version.outputs.version }}-1.x86_64.rpm
