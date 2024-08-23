@@ -1,4 +1,4 @@
-FROM golang:1.22.4 AS builder
+FROM golang:1.23 AS builder
 
 RUN apt update && \
     apt install -y libgtk-3-dev
